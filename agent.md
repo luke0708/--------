@@ -84,11 +84,11 @@
       - .env
 
 ### ⚠️ 端口分配协议 (The Port Protocol)
-在生成端口配置前，你必须严格遵守：
-1. **Access**: 访问 `Port-Registry/Global_Port_Registry.md` (**独立 Git 仓库**)。
+正式分配端口前，你必须严格遵守：
+1. **Access**: 访问 `Port-Registry/Global_Port_Registry.md`。
 2. **Sync**: 必须先执行 `git pull` 确保数据最新。
 3. **Select**: 找到一个状态为 `⚪️ Free` 的端口。
-4. **Lock**: 告诉用户：“我选择了端口 `XXXX`。**请立刻去 `Port-Registry` 目录提交并 Push！**” 
+4. **Lock**: 告诉用户：“我选择了端口 `XXXX`。**请立刻在 Port-Registry 目录提交并 Push！**” 
 ```
 
 ---
