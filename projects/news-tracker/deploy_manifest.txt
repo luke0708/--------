@@ -1,0 +1,4 @@
+Project: news-tracker
+Port: 50001
+Runtime: Python 3.11 / Node 20
+Remote_IP: 192.168.1.137

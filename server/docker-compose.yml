@@ -1,25 +1,9 @@
-version: '3.8'
-
 # ===========================================
 # Infrastructure 总控工程
 # Mac mini 开发 → GitHub → MacBook Air 部署
 # ===========================================
 
 services:
-  # --- 示例服务: Demo-Backend ---
-  demo-backend:
-    build: ../projects/Demo-Backend
-    container_name: demo-backend
-    restart: always
-    ports:
-      - "50001:8000"
-    env_file:
-      - .env
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
   # --- 监控工具: Dozzle (实时日志查看) ---
   dozzle:
     image: amir20/dozzle:latest
@@ -43,27 +27,24 @@ services:
 
   # === 在下方添加新服务 ===
 
-  # --- Mac mini 后端服务 ---
-  rss-backend:
-    build: ../projects/backend
-    container_name: rss-backend
+  # --- 新部署服务: News-Tracker ---
+  news-tracker:
+    build: ../projects/news-tracker/backend
+    container_name: news-tracker
     restart: always
     ports:
-      - "50002:8000"
+      - "50003:8000"
     env_file:
       - .env
+    environment:
+      - DATABASE_URL=sqlite:////app/data/news.db
     volumes:
-      - rss-data:/app/data
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - ../projects/news-tracker/backend/data:/app/data
 
 volumes:
   rss-data:
 
-    # 自定义网络（可选，用于服务间通信）
+
 networks:
   default:
     name: infra-network

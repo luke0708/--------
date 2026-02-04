@@ -1,0 +1,15 @@
+{
+  "name": "新闻追踪",
+  "short_name": "新闻追踪",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f2f2c",
+  "theme_color": "#0f2f2c",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

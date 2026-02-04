@@ -8,10 +8,8 @@
 # ================== 配置区 ==================
 # 列出所有需要更新的项目文件夹名称
 PROJECTS=(
-    "Demo-Backend"
-    # 添加新项目时在此追加，例如：
-    # "User-Backend"
-    # "Order-Backend"
+    "news-tracker"
+    # "Demo-Backend" # 如果还需要更新，可以取消注释
 )
 
 # Git 分支名称
