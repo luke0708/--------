@@ -2,44 +2,40 @@
 
 > **⚠️ 核心守则 (The Protocol)**
 >
-> 1.  **Sync First**: 在开启任何新项目前，必须先 `git pull` 确保拥有最新版本。
-> 2.  **Check**: 查阅下表，寻找一个标记为 `[VACANT]` 的空闲端口。
-> 3.  **Lock**: 将你的项目名称填入表格，**立即提交并推送到 GitHub**。
-> 4.  **Code**: 只有在 Push 成功后，才开始编写 docker-compose 代码。
+> 1.  **Sync First**: 开启新项目前必须先 `git pull`。
+> 2.  **Check**: 寻找 `⚪️ Free` 状态的端口。
+> 3.  **Lock**: 填入项目名，**立即 Push 到 GitHub**。
+> 4.  **Code**: 只有在云端锁定成功后，才开始编写代码。
 
 ---
 
-## 🎯 端口段规划 (Zone Allocation)
+## 🎯 端口段规划 (Extreme High Port Zone)
 
-| 端口范围 | 区域名称 | 适用项目 | 负责人 |
+| 端口范围 | 区域名称 | 适用项目 | 备注 |
 |:---:|---|---|---|
-| **8000-8009** | 🔴 Infrastructure Core | 核心网关、总控后端 | @Admin |
-| **8010-8049** | 🟢 Business Applications | 各类业务微服务 (爬虫, API等) | @Dev |
-| **8050-8079** | 🟡 Middlewares | 数据库面板, Redis, MQ 面板 | @Dev |
-| **8080-8099** | 🔵 System Dashboards | 监控面板, 日志中心 | @Admin |
+| **40000-40009** | 🔴 Infrastructure Core | 网关, 核心后端 | 极高优先级 |
+| **40010-40099** | 🟢 Business Apps | 业务微服务 (爬虫, API 等) | 推荐使用 |
+| **40100-40199** | 🟡 Middlewares | DB 面板, Redis 面板等 | - |
+| **39000-39999** | 🔵 System Dashboards | 面板, 日志, 监控 | 基础设施区 |
 
 ---
 
 ## 📝 注册表 (Registry)
 
-### 🔴 Core Zone (8000-8009)
+### 🔴 Core Zone (40000-40009)
 | Port | Service ID | Project Path | Status |
 |:---:|---|---|---|
-| **8000** | (Reserved) | - | 🚫 Reserved |
-| **8001** | demo-backend | `projects/Demo-Backend` | ✅ Active |
-| **8002** | rss-backend | `projects/backend` | ✅ Active |
-| **8003** | [VACANT] | - | ⚪️ Free |
-| **8004** | [VACANT] | - | ⚪️ Free |
+| **40001** | demo-backend | `projects/Demo-Backend` | ✅ Active |
+| **40002** | rss-backend | `projects/backend` | ✅ Active |
+| **40003** | [VACANT] | - | ⚪️ Free |
 
-### 🟢 Business Zone (8010-8049)
+### 🟢 Business Zone (40010-40099)
 | Port | Service ID | Project Path | Status |
 |:---:|---|---|---|
-| **8010** | [VACANT] | - | ⚪️ Free |
-| **8011** | [VACANT] | - | ⚪️ Free |
-| **8012** | [VACANT] | - | ⚪️ Free |
-| ... | ... | ... | ... |
+| **40010** | [VACANT] | - | ⚪️ Free |
+| **40011** | [VACANT] | - | ⚪️ Free |
 
-### 🔵 System Zone (39990-39999)
+### 🔵 System Zone (39000-39999)
 | Port | Service ID | Project Path | Status |
 |:---:|---|---|---|
 | **39999** | infra-dash | `server/infra-dash` | 🛡 SYSTEM |
