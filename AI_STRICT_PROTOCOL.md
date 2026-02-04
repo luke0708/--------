@@ -11,7 +11,7 @@
 在写任何代码前，必须访问云端：
 👉 **[全球端口注册表 (Global Port Registry)](https://github.com/luke0708/--------/blob/main/Port-Registry/Global_Port_Registry.md)**
 1. **必须**在 **50000+** 范围内挑选 `⚪️ Free` 端口（严禁挑选包含数字 4 的端口）。
-2. 告诉用户：“我已选定端口 `XXXX`，请去云端 Registry 锁定。”
+2. 告诉用户：“我为本项目提议使用端口 `XXXX`。请在交付时告知部署端 AI 进行最终登记。”
 
 ### 阶段 B：构建交付包 (Build Pack)
 严禁使用通用名称。必须按照以下格式生成打包指令：
