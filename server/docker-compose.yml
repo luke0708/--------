@@ -12,7 +12,7 @@ services:
     container_name: demo-backend
     restart: always
     ports:
-      - "40001:8000"
+      - "50001:8000"
     env_file:
       - .env
     healthcheck:
@@ -49,7 +49,7 @@ services:
     container_name: rss-backend
     restart: always
     ports:
-      - "40002:8000"
+      - "50002:8000"
     env_file:
       - .env
     volumes:

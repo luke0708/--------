@@ -10,7 +10,7 @@
 ### 阶段 A：申请唯一端口
 在写任何代码前，必须访问云端：
 👉 **[全球端口注册表 (Global Port Registry)](https://github.com/luke0708/--------/blob/main/Port-Registry/Global_Port_Registry.md)**
-1. **必须**在 **40000+** 范围内挑选 `⚪️ Free` 端口。
+1. **必须**在 **50000+** 范围内挑选 `⚪️ Free` 端口（严禁挑选包含数字 4 的端口）。
 2. 告诉用户：“我已选定端口 `XXXX`，请去云端 Registry 锁定。”
 
 ### 阶段 B：构建交付包 (Build Pack)
