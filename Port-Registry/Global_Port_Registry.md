@@ -27,7 +27,7 @@
 |:---:|---|---|---|
 | **50001** | demo-backend | `projects/Demo-Backend` | ✅ Active |
 | **50002** | rss-backend | `projects/backend` | ✅ Active |
-| **50003** | [VACANT] | - | ⚪️ Free |
+| **50003** | news-tracker | `projects/news-tracker` | ✅ Active |
 
 ### 🟢 Business Zone (50010-50099)
 | Port | Service ID | Project Path | Status |
