@@ -1,0 +1,69 @@
+version: '3.8'
+
+# ===========================================
+# Infrastructure 总控工程
+# Mac mini 开发 → GitHub → MacBook Air 部署
+# ===========================================
+
+services:
+  # --- 示例服务: Demo-Backend ---
+  demo-backend:
+    build: ../projects/Demo-Backend
+    container_name: demo-backend
+    restart: always
+    ports:
+      - "8001:8000"
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  # --- 监控工具: Dozzle (实时日志查看) ---
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "39998:8080"
+    restart: always
+
+  # --- 管理面板: Infra-Dash (图形化控制中心) ---
+  infra-dash:
+    build: ./infra-dash
+    container_name: infra-dash
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/app/scripts
+    ports:
+      - "39999:8000"
+    restart: always
+
+  # === 在下方添加新服务 ===
+
+  # --- Mac mini 后端服务 ---
+  rss-backend:
+    build: ../projects/backend
+    container_name: rss-backend
+    restart: always
+    ports:
+      - "8002:8000"
+    env_file:
+      - .env
+    volumes:
+      - rss-data:/app/data
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  rss-data:
+
+    # 自定义网络（可选，用于服务间通信）
+networks:
+  default:
+    name: infra-network

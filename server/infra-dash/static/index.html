@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infra-Dash | 自动化部署主控面板</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>Infra-Dash</h1>
+                <p>Mac Air / VPS 服务器管理中心</p>
+            </div>
+            <div class="actions">
+                <button id="update-btn" class="btn btn-primary">
+                    <span class="icon">🚀</span> 全量同步更新
+                </button>
+                <button id="shutdown-btn" class="btn btn-danger">
+                    <span class="icon">🛑</span> 全部停止
+                </button>
+                <div class="status-badge" id="server-status">
+                    <span class="dot pulse"></span> 服务器在线
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="overview">
+                <div class="stat-card">
+                    <h3>活跃容器</h3>
+                    <div class="value" id="active-count">...</div>
+                </div>
+                <div class="stat-card">
+                    <h3>系统负载</h3>
+                    <div class="value">正常</div>
+                </div>
+                <div class="stat-card">
+                    <h3>外部端口</h3>
+                    <div class="value">8001, 8002</div>
+                </div>
+            </section>
+
+            <section class="services-section">
+                <h2>微服务清单</h2>
+                <div class="services-grid" id="services-grid">
+                    <!-- 服务卡片动态注入 -->
+                    <div class="loading-state">正在拉取容器状态...</div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Antigravity Infrastructure Dashboard | <a href="http://localhost:39998" target="_blank"
+                    rel="noopener noreferrer">查看
+                    Dozzle 日志</a></p>
+        </footer>
+    </div>
+
+    <!-- 弹窗通知 -->
+    <div id="notification" class="hidden"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Infra-Dash Loaded v1.2');
+
+            const grid = document.getElementById('services-grid');
+            const updateBtn = document.getElementById('update-btn');
+            const shutdownBtn = document.getElementById('shutdown-btn');
+            const notification = document.getElementById('notification');
+
+            function showNotification(message, type = 'info') {
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+
+            async function fetchServices() {
+                try {
+                    const res = await fetch('/api/services');
+                    const services = await res.json();
+                    renderServices(services);
+                    document.getElementById('active-count').textContent = services.filter(s => s.status === 'running').length;
+                } catch (err) {
+                    showNotification('无法获取服务列表', 'error');
+                }
+            }
+
+            function renderServices(services) {
+                const coreServices = ['infra-dash', 'dozzle'];
+
+                grid.innerHTML = services.map(service => {
+                    const isCore = coreServices.includes(service.name);
+                    let actionButtons = '';
+
+                    if (service.status === 'running') {
+                        // 核心服务不显示停止按钮
+                        if (!isCore) {
+                            actionButtons += `<button onclick="window.controlService('${service.name}', 'stop')" title="停止">⏹️</button>`;
+                        }
+                    } else {
+                        actionButtons += `<button onclick="window.controlService('${service.name}', 'start')" title="启动">▶️</button>`;
+                    }
+                    actionButtons += `<button onclick="window.controlService('${service.name}', 'restart')" title="重启">🔄</button>`;
+
+                    return `
+                    <div class="service-card ${service.status}">
+                        <div class="status-indicator"></div>
+                        <div class="service-info">
+                            <h3>${service.name} ${isCore ? '<span style="font-size:0.6em;background:#6366f1;padding:2px 6px;border-radius:4px;">CORE</span>' : ''}</h3>
+                            <p class="image-tag">${service.image}</p>
+                            <p class="status-text">${service.status.toUpperCase()}</p>
+                        </div>
+                        <div class="service-actions">
+                            ${actionButtons}
+                        </div>
+                    </div>
+                `}).join('');
+            }
+
+            // 将 controlService 挂载到 window 对象，以便 onclick 能够调用
+            window.controlService = async function (name, action) {
+                showNotification(`正在对 ${name} 执行 ${action}...`);
+                try {
+                    const res = await fetch(`/api/services/${name}/${action}`, { method: 'POST' });
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        showNotification(`${name} ${action} 成功`, 'success');
+                        fetchServices();
+                    }
+                } catch (err) {
+                    showNotification(`操作失败: ${err.message}`, 'error');
+                }
+            };
+
+            if (updateBtn) {
+                updateBtn.onclick = async () => {
+                    if (!confirm('确定要执行全量同步更新吗？这可能会导致服务短时中断。')) return;
+                    showNotification('开始拉取代码并重建所有服务...', 'info');
+                    try {
+                        const res = await fetch('/api/system/update', { method: 'POST' });
+                        showNotification('系统更新任务已启动，请观察日志', 'success');
+                        setTimeout(fetchServices, 5000);
+                    } catch (err) {
+                        showNotification('更新指令发送失败', 'error');
+                    }
+                };
+            }
+
+            if (shutdownBtn) {
+                shutdownBtn.onclick = async () => {
+                    if (!confirm('⚠️ 高能预警：\n\n确定要停止所有后台服务吗？\n这将导致面板自身也被关闭，你需要手动通过终端才能再次启动。')) return;
+                    showNotification('正在下达全线停机指令...', 'error');
+                    try {
+                        // 发送请求但不等待响应，因为服务会自行停止
+                        fetch('/api/system/shutdown-all', { method: 'POST' });
+
+                        // 模拟停机效果
+                        setTimeout(() => {
+                            document.body.innerHTML = `
+                                <div style="height:100vh;display:flex;justify-content:center;align-items:center;flex-direction:column;color:white;">
+                                    <h1 style="font-size:3rem;margin-bottom:20px;">🛑 服务已停止</h1>
+                                    <p>所有 Docker 容器已安全关闭。</p>
+                                    <p style="color:#666;margin-top:10px;">如需恢复，请在终端运行: cd server && ./update.sh</p>
+                                </div>
+                            `;
+                        }, 2000);
+                    } catch (err) {
+                        console.error(err);
+                    }
+                };
+            }
+
+            // 初始拉取并定时刷新
+            fetchServices();
+            setInterval(fetchServices, 10000);
+        });
+    </script>
+</body>
+
+</html>
