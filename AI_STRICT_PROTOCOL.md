@@ -14,11 +14,17 @@
 2. 告诉用户：“我为本项目提议使用端口 `XXXX`。请在交付时告知部署端 AI 进行最终登记。”
 
 ### 阶段 B：构建交付包 (Build Pack)
-严禁使用通用名称。必须按照以下格式生成打包指令：
-```bash
-# 格式: [项目名]-deliverable.zip
-zip -r [project-name]-deliverable.zip . -x "*.git*" -x "*venv*" -x "*__pycache__*" -x "*.env"
-```
+
+1. **生成身份清单**：在项目根目录创建 `deploy_manifest.txt`，内容如下：
+   ```text
+   Project: [项目名]
+   Port: [XXXX]
+   Runtime: Python 3.11
+   ```
+2. **打包指令**：必须包含清单文件。
+   ```bash
+   zip -r [project-name]-deliverable.zip . -x "*.git*" -x "*venv*" -x "*__pycache__*" -x "*.env"
+   ```
 
 ### 阶段 C：Infrastructure 配置段落
 提供以下 YAML 给用户直接粘贴到总控 `docker-compose.yml`：
