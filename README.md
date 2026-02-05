@@ -24,18 +24,14 @@
 
 ## 🚦 快速开始
 
-### 1. 部署环境安装
-```bash
-./vps-one-click.sh
-```
+### 场景一：在 MacBook Air (局域网) 部署
+1. 确保已安装 [Docker Desktop](https://www.docker.com/products/docker-desktop/)。
+2. 运行 `ipconfig getifaddr en0` 查看内网 IP。
+3. 执行：`cd server && docker compose up -d`。
 
-### 2. 启动总控制中心
-```bash
-cd server && docker compose up -d
-```
-
-### 3. 加入新项目
-参考 `DEPLOYMENT.md` 了解如何使用 AI 自动识别并发布新的业务项目。
+### 场景二：在 VPS (云端) 部署
+1. 建议使用 Ubuntu 系统。
+2. 执行一键安装：`sudo bash vps-one-click.sh`。
 
 ---
 

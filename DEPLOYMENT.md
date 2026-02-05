@@ -21,11 +21,39 @@
 
 ---
 
-## 🛠️ 环境依赖
-
-- **操作系统**: macOS (推荐) / Linux
-- **核心工具**: Docker Desktop, Git, Python 3.10+
+- **核心工具**: Docker Desktop (Mac) / Docker Engine (Linux), Git, Python 3.10+
 - **网络需求**: 需要能够访问 GitHub 及 AI API (如 DeepSeek)。
+
+---
+
+## 📍 部署场景区分
+
+### 方案 A：局域网部署 (适用于 MacBook Air / Mac mini)
+这是项目推荐的协作模式，利用内网高速传输代码包。
+
+1. **环境准备**：
+   - 安装 **Docker Desktop for Mac**。
+   - 在 Docker 设置中，确保已勾选 `Allow the default Docker network to be used`。
+2. **获取内网 IP**：
+   - 运行 `ipconfig getifaddr en0` (Wi-Fi) 或 `en1` (有线)。
+   - 记录你的内网 IP（示例：`192.168.1.137`）。
+3. **跨设备访问**：
+   - 在开发端 (Mac mini) 的前端代码中，将 API 地址指向 `http://192.168.1.137:50003`。
+
+### 方案 B：云端 (VPS) 部署 (适用于阿里云/腾讯云/DigitalOcean等)
+适用于需要公网访问、长期稳定的生产环境。
+
+1. **一键初始化**：
+   ```bash
+   sudo bash vps-one-click.sh
+   ```
+2. **安全组配置**：
+   - 必须通过 VPS 控制台开放以下入站端口：
+     - `39999` (管理面板)
+     - `39998` (日志监控)
+     - `50000-50100` (业务项目预留端口段)
+3. **网络访问**：
+   - 使用 `http://YOUR_VPS_IP:39999` 进行远程管理。
 
 ## 📁 目录权限规范
 
